@@ -27,10 +27,10 @@
      <string>Create a lwm2m interface in LO</string>
     </property>
    </widget>
-   <widget class="QCommandLinkButton" name="Connect">
+   <widget class="QCommandLinkButton" name="ConnectIface">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>120</y>
       <width>281</width>
       <height>41</height>
@@ -38,6 +38,19 @@
     </property>
     <property name="text">
      <string>Connect lwm2m client to interface</string>
+    </property>
+   </widget>
+   <widget class="QCommandLinkButton" name="DeleteIface">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>230</y>
+      <width>271</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Delete lwm2m Interface in LO</string>
     </property>
    </widget>
   </widget>

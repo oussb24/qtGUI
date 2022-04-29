@@ -20,12 +20,14 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 340)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.CreateIface = QtWidgets.QCommandLinkButton(self.centralwidget,clicked = lambda : self.CreateLwm2mIface())
-        self.CreateIface.setGeometry(QtCore.QRect(10, 70, 281, 41))
+        self.CreateIface = QtWidgets.QCommandLinkButton(self.centralwidget,clicked = lambda : self.CreateLwm2mIfaceF())
         self.CreateIface.setObjectName("CreateIface")
-        self.Connect = QtWidgets.QCommandLinkButton(self.centralwidget, clicked = lambda :self.ConncetToIface())
-        self.Connect.setGeometry(QtCore.QRect(10, 120, 281, 41))
-        self.Connect.setObjectName("Connect")
+        self.ConnectIface = QtWidgets.QCommandLinkButton(self.centralwidget, clicked = lambda :self.ConncetToIface())        
+        self.ConnectIface.setGeometry(QtCore.QRect(20, 120, 281, 41))
+        self.ConnectIface.setObjectName("ConnectIface")
+        self.DeleteIface = QtWidgets.QCommandLinkButton(self.centralwidget, clicked = lambda :self.DeleteIfaceF())
+        self.DeleteIface.setGeometry(QtCore.QRect(310, 230, 271, 41))
+        self.DeleteIface.setObjectName("DeleteIface")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -38,21 +40,22 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.CreateIface.setText(_translate("MainWindow", "Create a lwm2m interface in LO"))
-        self.Connect.setText(_translate("MainWindow", "Connect lwm2m client to interface"))
+        self.ConnectIface.setText(_translate("MainWindow", "Connect lwm2m client to interface"))
+        self.DeleteIface.setText(_translate("MainWindow", "Delete lwm2m Interface in LO"))
 
-    def CreateLwm2mIface(self):
+    def CreateLwm2mIfaceF(self):
         
-        url = "https://integ.m2m.orange.com/api/v1/deviceMgt/devices"
+            url = "https://integ.m2m.orange.com/api/v1/deviceMgt/devices"
 
-        payload = "{\r\n    \"id\": \"urn:lo:nsid:lwm2m:ifacelwm2m\",\r\n \"name\": \"Lwm2m device\",\r\n    \"description\": \"device for test\",\r\n    \"defaultDataStreamId\": \"urn:lo:nsid:lwm2m:ifacelwm2m\",\r\n\r\n    \"interfaces\": [\r\n        {\r\n            \"connector\": \"lwm2m\",\r\n            \"enabled\": \"true\",\r\n            \"definition\": {\r\n                \"endpointName\": \"urn:lo:lwm2m:ifacelwm2m\",\r\n                \"security\": {\r\n                    \"pskInfo\": {\r\n                        \"identity\": \"pskid\",\r\n                        \"secret\" : \"6d7973656372657470736b617a657274\"\r  \n                  }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n\r\n}"
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-API-Key': '1d576207727841a7b9aa2a1f24448f86',
-            'Cookie': 'XSRF-TOKEN=d4af0d8c-5e37-415f-8c72-3da0a7f68c5c'
-        }
-        response = requests.request("POST", url, headers=headers, data=payload,verify =False)
-        print(response.text)
+            payload = "{\r\n    \"id\": \"urn:lo:nsid:lwm2m:ifacelwm2m\",\r\n \"name\": \"Lwm2m device\",\r\n    \"description\": \"device for test\",\r\n    \"defaultDataStreamId\": \"urn:lo:nsid:lwm2m:ifacelwm2m\",\r\n\r\n    \"interfaces\": [\r\n        {\r\n            \"connector\": \"lwm2m\",\r\n            \"enabled\": \"true\",\r\n            \"definition\": {\r\n                \"endpointName\": \"urn:lo:lwm2m:ifacelwm2m\",\r\n                \"security\": {\r\n                    \"pskInfo\": {\r\n                        \"identity\": \"pskid\",\r\n                        \"secret\" : \"6d7973656372657470736b617a657274\"\r  \n                  }\r\n                }\r\n            }\r\n        }\r\n    ]\r\n\r\n}"
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-API-Key': '1d576207727841a7b9aa2a1f24448f86',
+                'Cookie': 'XSRF-TOKEN=d4af0d8c-5e37-415f-8c72-3da0a7f68c5c'
+            }
+            response = requests.request("POST", url, headers=headers, data=payload,verify =False)
+            print(response.text)
 
     def ConncetToIface(self):
         subprocess.Popen(['powershell.exe', 'java -jar ./leshan-client-demo.jar \
@@ -61,6 +64,17 @@ class Ui_MainWindow(object):
                                                         -p 6d7973656372657470736b617a657274\
                                                         -u lwm2m.integ.m2m.orange.com'])
 
+    def DeleteIfaceF(self):
+        url = "https://integ.m2m.orange.com/api/v1/deviceMgt/devices/urn:lo:nsid:lwm2m:ifacelwm2m"
+        payload={}
+        headers = {
+        'X-API-Key': '1d576207727841a7b9aa2a1f24448f86'
+                }
+
+        response = requests.request("DELETE", url, headers=headers, data=payload,verify =False)
+
+        print(response.text)
+                                                     
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
